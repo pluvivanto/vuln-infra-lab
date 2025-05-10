@@ -37,8 +37,8 @@ jobs:
 
       - name: Copy and run remote script
         run: |
-          scp -i key.pem -o StrictHostKeyChecking=no deploy/redeploy.sh ubuntu@${{ secrets.AWS_EC2_PUBLIC_IP }}:/tmp/redeploy.sh
-          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.AWS_EC2_PUBLIC_IP }} 'bash /tmp/redeploy.sh'
+          scp -i key.pem -o StrictHostKeyChecking=no deploy/redeploy.sh ubuntu@${{ secrets.AWS_EC2_EIP }}:/tmp/redeploy.sh
+          ssh -i key.pem -o StrictHostKeyChecking=no ubuntu@${{ secrets.AWS_EC2_EIP }} 'bash /tmp/redeploy.sh'
 
       - name: Remove Github Actions IP from Security group
         run: |
