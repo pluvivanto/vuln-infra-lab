@@ -28,7 +28,7 @@ jobs:
             --group-name ${{ secrets.AWS_SG_NAME }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ env.runner_ip }}/32
+            --cidr ${{ env.runner_ip }}/32 > /dev/null
 
       - name: Set up SSH key
         run: |
@@ -46,4 +46,4 @@ jobs:
             --group-id ${{ secrets.AWS_SG_NAME }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ steps.runner-ip.outputs.ipv4 }}/32
+            --cidr ${{ env.runner_ip }}/32 > /dev/null
