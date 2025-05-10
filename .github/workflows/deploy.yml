@@ -13,8 +13,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Get public ip
-        id: runner-ip
-        run: curl https://ifconfig.me/ip
+        run: echo "runner_ip=$(curl https://ifconfig.me/ip)" >> $GITHUB_ENV
 
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4.1.0
@@ -29,7 +28,7 @@ jobs:
             --group-name ${{ secrets.AWS_SG_NAME }} \
             --protocol tcp \
             --port 22 \
-            --cidr ${{ steps.runner-ip.outputs.ipv4 }}/32
+            --cidr ${{ env.runner_ip }}/32
 
       - name: Set up SSH key
         run: |
