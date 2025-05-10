@@ -21,12 +21,11 @@ resource "local_file" "pem_file" {
 }
 
 resource "aws_instance" "juiceshop" {
-  ami           = "ami-05c17b22914ce7378" # Ubuntu 24.04LTS us-east-1	arm64
-  instance_type = "t3.micro"
-  key_name      = aws_key_pair.lab_kp.key_name
-
-  vpc_security_group_ids = [aws_security_group.allow_ssh_http.id]
-
+  ami                         = "ami-05c17b22914ce7378" # Ubuntu 24.04LTS us-east-1	arm64
+  instance_type               = "t3.micro"
+  key_name                    = aws_key_pair.lab_kp.key_name
+  vpc_security_group_ids      = [aws_security_group.sg_allow_ssh_http.id]
+  associate_public_ip_address = false
   tags = {
     Name = "mytest-juiceShop"
   }
@@ -38,12 +37,15 @@ resource "aws_instance" "juiceshop" {
   apt-get install -y docker.io
   docker run -d --name juice -p 80:3000 bkimminich/juice-shop
 EOF
-  user_data_replace_on_change = true
 }
 
-resource "aws_security_group" "allow_ssh_http" {
-  name        = "allow_ssh_http"
-  description = "Allow SSH and HTTP"
+resource "aws_eip" "juice_ip" {
+  instance = aws_instance.juiceshop.id
+  domain   = "vpc"
+}
+
+resource "aws_security_group" "sg_allow_ssh_http" {
+  name = "mytest-juiceshop-sg"
 
   ingress {
     from_port   = 22
