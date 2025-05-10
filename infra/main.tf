@@ -35,7 +35,10 @@ resource "aws_instance" "juiceshop" {
   set -e
   apt-get update
   apt-get install -y docker.io
-  docker run -d --name juice -p 80:3000 bkimminich/juice-shop
+  usermod -aG docker ubuntu
+  systemctl restart docker
+  docker pull bkimminich/juice-shop
+  docker run -d --rm --name juice-shop -p 80:3000 bkimminich/juice-shop
 EOF
 }
 
